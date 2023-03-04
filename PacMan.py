@@ -1,18 +1,27 @@
 import pygame
+import pygame_menu
 
 from GameInit import *
 from Field import *
-from StaticObjects import *
+from Player import *
+from StaticObjects import *  
 
 if __name__ == "__main__":
-    unified_size = 32
+    UniSize = 32
     game = MazeAndPathController()
     size = game.size
-    game_renderer = GameInit(size[0] * unified_size, size[1] * unified_size)
+    gameInit = GameInit(size[0] * UniSize, size[1] * UniSize)
 
     for y, row in enumerate(game.numpy_maze):
         for x, column in enumerate(row):
             if column == 0:
-                game_renderer.AddWall(Wall(game_renderer, x, y, unified_size))
-
-    game_renderer.MainLoop(120)
+                gameInit.AddWall(Wall(gameInit, x, y, UniSize))
+    
+    for cookie_space in game.dotPlace:
+        translated = MazeToScreen(cookie_space)
+        cookie = Cookie(gameInit, translated[0] + UniSize / 2, translated[1] + UniSize / 2)
+        gameInit.AddCookie(cookie)
+        
+    pacman = Player(gameInit, 32, 32, UniSize)
+    gameInit.AddPacman(pacman)
+    gameInit.MainLoop(120)
