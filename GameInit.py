@@ -93,7 +93,7 @@ class GameInit:  # ініціалізація параметрів гри
     
     def GetGameObjects(self):
         return self.gameObjects    
-    
+
     def HandleEvents(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

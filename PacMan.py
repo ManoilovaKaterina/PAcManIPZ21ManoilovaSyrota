@@ -1,6 +1,3 @@
-import pygame
-import pygame_menu
-
 from GameInit import *
 from Field import *
 from Player import *
@@ -16,7 +13,7 @@ if __name__ == "__main__":
         for x, column in enumerate(row):
             if column == 0:
                 gameInit.AddWall(Wall(gameInit, x, y, UniSize))
-    
+
     for cookie_space in game.dotPlace:
         translated = MazeToScreen(cookie_space)
         cookie = Cookie(gameInit, translated[0] + UniSize / 2, translated[1] + UniSize / 2)
