@@ -53,6 +53,7 @@ class GameInit:  # ініціалізація параметрів гри
         self.done = False
         self.score = 0
         self.cookies = []
+        self.ghosts = []
         self.gameObjects = []
         self.walls = []
         self.mouthOpenEvent = pygame.USEREVENT + 1
@@ -85,6 +86,10 @@ class GameInit:  # ініціалізація параметрів гри
         self.gameObjects.append(obj)
         self.cookies.append(obj)
 
+    def AddGhost(self, obj: GameObject):
+        self.gameObjects.append(obj)
+        self.ghosts.append(obj)
+
     def GetWalls(self):
         return self.walls
     
@@ -93,6 +98,9 @@ class GameInit:  # ініціалізація параметрів гри
     
     def GetGameObjects(self):
         return self.gameObjects    
+
+    def GetGhosts(self):
+        return self.ghosts
 
     def HandleEvents(self):
         for event in pygame.event.get():
