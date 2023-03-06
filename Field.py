@@ -28,7 +28,7 @@ class MazeAndPathController:
             "X                          X",
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
         ]
-
+        self.dotPlace = []
         self.numpy_maze = []
         self.reachable_spaces = []
 
@@ -45,6 +45,7 @@ class MazeAndPathController:
                     binary_row.append(0)
                 else:
                     binary_row.append(1)
+                    self.dotPlace.append((y, x))
                     self.reachable_spaces.append((y, x))
                     
             self.numpy_maze.append(binary_row)
