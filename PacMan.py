@@ -21,6 +21,7 @@ if __name__ == "__main__":
     size = game.size
     gameInit = GameInit(size[0] * UniSize, size[1] * UniSize)
 
+
     for y, row in enumerate(game.numpy_maze):
         for x, column in enumerate(row):
             if column == 0:
@@ -39,3 +40,4 @@ if __name__ == "__main__":
     pacman = Player(gameInit, 32, 32, UniSize)
     gameInit.AddPacman(pacman)
     gameInit.MainLoop(120)
+
