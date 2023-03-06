@@ -98,7 +98,7 @@ class GameInit:  # ініціалізація параметрів гри
     
     def GetGameObjects(self):
         return self.gameObjects    
-    
+
     def GetGhosts(self):
         return self.ghosts
 

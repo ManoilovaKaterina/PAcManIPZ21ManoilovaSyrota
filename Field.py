@@ -44,6 +44,7 @@ class MazeAndPathController:
         ]
         self.dotPlace = []
         self.ghost_spawns = []
+
         self.numpy_maze = []
         self.reachable_spaces = []
         self.size = (0, 0)
@@ -72,7 +73,7 @@ class MazeAndPathController:
                     binary_row.append(0)
                 else:
                     binary_row.append(1)
-
+                    
                     self.dotPlace.append((y, x))
                     self.reachable_spaces.append((y, x))
                     

@@ -1,11 +1,10 @@
 import pygame
 import pygame_menu
-
 from GameInit import *
 from Field import *
 from Ghost import *
 from Player import *
-from StaticObjects import *
+from StaticObjects import *  
 
 # кольори привидів
 GhostColors = [
@@ -20,7 +19,6 @@ if __name__ == "__main__":
     game = MazeAndPathController()
     size = game.size
     gameInit = GameInit(size[0] * UniSize, size[1] * UniSize)
-
 
     for y, row in enumerate(game.numpy_maze):
         for x, column in enumerate(row):
@@ -37,7 +35,11 @@ if __name__ == "__main__":
         ghost = Ghost(gameInit, translated[0], translated[1], UniSize, game, GhostColors[i % 4])
         gameInit.AddGhost(ghost)
 
+    for cookie_space in game.dotPlace:
+        translated = MazeToScreen(cookie_space)
+        cookie = Cookie(gameInit, translated[0] + UniSize / 2, translated[1] + UniSize / 2)
+        gameInit.AddCookie(cookie)
+        
     pacman = Player(gameInit, 32, 32, UniSize)
     gameInit.AddPacman(pacman)
     gameInit.MainLoop(120)
-
