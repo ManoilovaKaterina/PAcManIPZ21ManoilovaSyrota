@@ -1,6 +1,8 @@
 import pygame
 from enum import Enum
 
+GeneralFont = 'C:/Users/undor/sprites/Press_Start_2P/PressStart2P-Regular.ttf'
+
 class Direction(Enum): # клас для визначення напрямку руху
     DOWN = -90
     RIGHT = 0
@@ -49,6 +51,9 @@ class GameInit:  # ініціалізація параметрів гри
         self.clock = pygame.time.Clock()
         self.pacman = None
         self.done = False
+        self.score = 0
+        self.cookies = []
+        self.ghosts = []
         self.gameObjects = []
         self.walls = []
         self.mouthOpenEvent = pygame.USEREVENT + 1
@@ -77,9 +82,26 @@ class GameInit:  # ініціалізація параметрів гри
         self.AddGameObject(initHero)
         self.pacman = initHero
 
+    def AddCookie(self, obj: GameObject):
+        self.gameObjects.append(obj)
+        self.cookies.append(obj)
+
+    def AddGhost(self, obj: GameObject):
+        self.gameObjects.append(obj)
+        self.ghosts.append(obj)
+
     def GetWalls(self):
         return self.walls
     
+    def GetCookies(self):
+        return self.cookies
+    
+    def GetGameObjects(self):
+        return self.gameObjects    
+    
+    def GetGhosts(self):
+        return self.ghosts
+
     def HandleEvents(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
