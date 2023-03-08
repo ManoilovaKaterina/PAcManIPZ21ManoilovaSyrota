@@ -94,7 +94,7 @@ class GameInit:  # ініціалізація параметрів гри
     def AddPowerup(self, obj: GameObject):
         self.gameObjects.append(obj)
         self.powerups.append(obj)
-
+        
     def AddGhost(self, obj: GameObject):
         self.gameObjects.append(obj)
         self.ghosts.append(obj)
@@ -136,6 +136,9 @@ class GameInit:  # ініціалізація параметрів гри
     def GetGameObjects(self):
         return self.gameObjects    
     
+    def GetGhosts(self):
+        return self.ghosts
+
     def GetGhosts(self):
         return self.ghosts
 

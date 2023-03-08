@@ -64,7 +64,6 @@ class MazeAndPathController:
             self.size = (len(row), x + 1)
             binary_row = []
             for y, column in enumerate(row):
-
                 if column == "G":
                     self.ghost_spawns.append((y, x))
                 if column == "O":
@@ -73,6 +72,7 @@ class MazeAndPathController:
                     binary_row.append(0)
                 else:
                     binary_row.append(1)
+                    
                     self.dotPlace.append((y, x))
                     self.reachable_spaces.append((y, x))
                     
