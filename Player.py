@@ -30,10 +30,10 @@ class Player(MovableObject):
 
         if self.CollidesWall((self.x, self.y)): # уникнення стикання зі стінами
             self.setPosition(self.lastNonCollidingPos[0], self.lastNonCollidingPos[1])
-
         self.CookiePickup()
         self.HandleGhosts()
 
+        
     def Move(self, dir: Direction):
         collisionResult = self.CheckCollision(dir)
 
