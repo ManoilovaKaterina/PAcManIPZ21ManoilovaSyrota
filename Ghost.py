@@ -7,7 +7,10 @@ class Ghost(MovableObject):
     def __init__(self, surf, x, y, initSize: int, initGameController, SpritePath):
         super().__init__(surf, x, y, initSize)
         self.gameController = initGameController
+        self.spritePath = SpritePath
+        self.spawnPoint = [x, y] # початкова координата
         self.spriteBasic = pygame.image.load(SpritePath)
+        self.spritePowerup = pygame.image.load("C:/Users/undor/sprites/GhostFright.png")
         
     def ReachedTarget(self): # поведінка при досягненні цілі
         if (self.x, self.y) == self.nextTarget:
@@ -47,5 +50,5 @@ class Ghost(MovableObject):
             self.setPosition(self.x + 1, self.y)
 
     def draw(self):
-        self.image = self.spriteBasic
+        self.image = self.spritePowerup if self.gameInit.IsPowerupActive() else self.spriteBasic
         super(Ghost, self).draw()

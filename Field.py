@@ -39,12 +39,12 @@ class MazeAndPathController:
             "XXX XX XX XXXXXXXX XX XX XXX",
             "X      XX    XX    XX      X",
             "X XXXXXXXXXX XX XXXXXXXXXX X",
-            "X                          X",
+            "X    O                O    X",
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
         ]
         self.dotPlace = []
+        self.powerupSpace = []
         self.ghost_spawns = []
-
         self.numpy_maze = []
         self.reachable_spaces = []
         self.size = (0, 0)
@@ -64,11 +64,10 @@ class MazeAndPathController:
             self.size = (len(row), x + 1)
             binary_row = []
             for y, column in enumerate(row):
-
-
                 if column == "G":
                     self.ghost_spawns.append((y, x))
-
+                if column == "O":
+                    self.powerupSpace.append((y, x))
                 if column == "X":
                     binary_row.append(0)
                 else:

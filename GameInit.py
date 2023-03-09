@@ -51,12 +51,17 @@ class GameInit:  # ініціалізація параметрів гри
         self.clock = pygame.time.Clock()
         self.pacman = None
         self.done = False
+        self.win = False
+        self.lives = 3
         self.score = 0
+        self.powerupActive = False
         self.cookies = []
+        self.powerups = []
         self.ghosts = []
         self.gameObjects = []
         self.walls = []
         self.mouthOpenEvent = pygame.USEREVENT + 1
+        self.powerupEndEvent = pygame.USEREVENT + 2
 
     def MainLoop(self, in_fps: int):
         color = (0, 0, 0)
@@ -65,7 +70,7 @@ class GameInit:  # ініціалізація параметрів гри
             for game_object in self.gameObjects:
                 game_object.tick()
                 game_object.draw()
-
+            
             pygame.display.flip()
             self.clock.tick(in_fps)
             self.screen.fill(color)
@@ -86,9 +91,38 @@ class GameInit:  # ініціалізація параметрів гри
         self.gameObjects.append(obj)
         self.cookies.append(obj)
 
+    def AddPowerup(self, obj: GameObject):
+        self.gameObjects.append(obj)
+        self.powerups.append(obj)
+        
     def AddGhost(self, obj: GameObject):
         self.gameObjects.append(obj)
         self.ghosts.append(obj)
+
+    def SetPowerupTime(self): # відлік часу паверапу
+        pygame.time.set_timer(self.powerupEndEvent, 10000)
+    
+    def ActivatePowerup(self): # активація паверапу
+        self.powerupActive = True
+        self.isChasing = False
+        self.SetPowerupTime()
+
+    def EndGame(self): # завершення гри
+        if self.pacman in self.gameObjects:
+            self.gameObjects.remove(self.pacman)
+        self.pacman = None
+
+    def KillPacman(self): # вбити гравця
+        self.lives -= 1
+        self.pacman.setPosition(self.pacman.spawnPoint[0], self.pacman.spawnPoint[1]) # переміщення гравця у початкову позицію
+        for ghost in self.ghosts: # повернення привидів до початкового стану
+            ghost.__init__(self, ghost.spawnPoint[0], ghost.spawnPoint[1], 32, ghost.gameController, ghost.spritePath)
+        self.pacman.SetDirection(Direction.NONE)
+        if self.lives == 0:
+            self.EndGame() # завершення гри якщо життя закінчились
+
+    def IsPowerupActive(self):
+        return self.powerupActive
 
     def GetWalls(self):
         return self.walls
@@ -96,8 +130,14 @@ class GameInit:  # ініціалізація параметрів гри
     def GetCookies(self):
         return self.cookies
     
+    def GetPowerups(self):
+        return self.powerups
+    
     def GetGameObjects(self):
         return self.gameObjects    
+    
+    def GetGhosts(self):
+        return self.ghosts
 
     def GetGhosts(self):
         return self.ghosts
@@ -106,6 +146,9 @@ class GameInit:  # ініціалізація параметрів гри
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.done = True
+
+            if event.type == self.powerupEndEvent:
+                self.powerupActive = False
 
             if event.type == self.mouthOpenEvent: # подія для анімації відкривання роту пакмана
                 if self.pacman is None: break
