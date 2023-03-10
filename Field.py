@@ -25,12 +25,12 @@ class MazeAndPathController:
             "X      XX    XX    XX      X",
             "XXXXXX XXXXX XX XXXXX XXXXXX",
             "XXXXXX XX          XX XXXXXX",
-            "XXXXXX XX XXX  XXX XX XXXXXX",
-            "XXXXXX XX X      X XX XXXXXX",
-            "          X GGGG X          ",
-            "XXXXXX XX X      X XX XXXXXX",
+            "XXXXXX XX XXXGBXXX XX XXXXXX",
+            "XXXXXX XX XBBBBBBX XX XXXXXX",
+            "          XBBGGGBX          ",
+            "XXXXXX XX XBBBBBBX XX XXXXXX",
             "XXXXXX XX XXXXXXXX XX XXXXXX",
-            "XXXXXX XX          XX XXXXXX",
+            "XXXXXX XX    P     XX XXXXXX",
             "XXXXXX XX XXXXXXXX XX XXXXXX",
             "X            XX            X",
             "X XXXX XXXXX XX XXXXX XXXX X",
@@ -44,11 +44,12 @@ class MazeAndPathController:
         ]
         self.dotPlace = []
         self.powerupSpace = []
+        self.blankSpaces = []
         self.ghost_spawns = []
         self.numpy_maze = []
         self.reachable_spaces = []
         self.size = (0, 0)
-        self.convert_maze_to_numpy()
+        self.MazeToNumpy()
         self.p = Pathfinder(self.numpy_maze)
 
     def NewRanPath(self, in_ghost: Ghost): # отримання випадкового шляху в лабірінті
@@ -59,21 +60,23 @@ class MazeAndPathController:
         test_path = [MazeToScreen(item) for item in path]
         in_ghost.SetNewPath(test_path)
 
-    def convert_maze_to_numpy(self):
+    def MazeToNumpy(self): # перетворення запису лабірінту в масив
         for x, row in enumerate(self.ascii_maze):
             self.size = (len(row), x + 1)
             binary_row = []
             for y, column in enumerate(row):
+                if column == "P":
+                    self.hero_spawn = (y, x)
                 if column == "G":
                     self.ghost_spawns.append((y, x))
-                if column == "O":
-                    self.powerupSpace.append((y, x))
                 if column == "X":
                     binary_row.append(0)
                 else:
                     binary_row.append(1)
-                    
-                    self.dotPlace.append((y, x))
-                    self.reachable_spaces.append((y, x))
-                    
+                    if (column != "B") & (column != "G"):
+                        self.dotPlace.append((y, x))
+                    self.blankSpaces.append((y, x))
+                    if column == "O":
+                        self.powerupSpace.append((y, x))
+
             self.numpy_maze.append(binary_row)
