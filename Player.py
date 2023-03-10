@@ -30,10 +30,10 @@ class Player(MovableObject):
 
         if self.CollidesWall((self.x, self.y)): # уникнення стикання зі стінами
             self.setPosition(self.lastNonCollidingPos[0], self.lastNonCollidingPos[1])
+
         self.CookiePickup()
         self.HandleGhosts()
 
-        
     def Move(self, dir: Direction):
         collisionResult = self.CheckCollision(dir)
 
@@ -81,8 +81,8 @@ class Player(MovableObject):
             collides = collision_rect.colliderect(ghost.getShape())
             if collides and ghost in gameObj:
                 if self.gameInit.IsPowerupActive(): # вбити привида при паверапі
-                    ghosts.remove(ghost)
-                    gameObj.remove(ghost)
+                    ghost.Kill()
+                    self.gameInit.GhostRespawn()
                     self.gameInit.score += 400
                 else:
                     if not self.gameInit.win: # вбити пакмена у іншому випадку

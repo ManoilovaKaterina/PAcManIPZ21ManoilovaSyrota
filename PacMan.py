@@ -15,14 +15,15 @@ GhostColors = [
         ]
 
 # кольори привидів
-GhostColors = [
-            "E:/UNI/2 курс/2 семестр/NI_RPZ/RedGhost.png",
-            "E:/UNI/2 курс/2 семестр/NI_RPZ/PinkGhost.png",
-            "E:/UNI/2 курс/2 семестр/NI_RPZ/OrangeGhost.png",
-            "E:/UNI/2 курс/2 семестр/NI_RPZ/BlueGhost.png"
-        ]
+# GhostColors = [
+#             "E:/UNI/2 курс/2 семестр/NI_RPZ/RedGhost.png",
+#             "E:/UNI/2 курс/2 семестр/NI_RPZ/PinkGhost.png",
+#             "E:/UNI/2 курс/2 семестр/NI_RPZ/OrangeGhost.png",
+#             "E:/UNI/2 курс/2 семестр/NI_RPZ/BlueGhost.png"
+#         ]
 
 if __name__ == "__main__":
+    pygame.init()
     UniSize = 32
     game = MazeAndPathController()
     size = game.size
@@ -38,26 +39,17 @@ if __name__ == "__main__":
         cookie = Cookie(gameInit, translated[0] + UniSize / 2, translated[1] + UniSize / 2)
         gameInit.AddCookie(cookie)
     
-    for i, ghost_spawn in enumerate(game.ghost_spawns):
-        translated = MazeToScreen(ghost_spawn)
-        ghost = Ghost(gameInit, translated[0], translated[1], UniSize, game, GhostColors[i % 4])
-        gameInit.AddGhost(ghost)
-
-    for cookie_space in game.dotPlace:
-        translated = MazeToScreen(cookie_space)
-        cookie = Cookie(gameInit, translated[0] + UniSize / 2, translated[1] + UniSize / 2)
-        gameInit.AddCookie(cookie)
-    
-    for i, ghost_spawn in enumerate(game.ghost_spawns):
-        translated = MazeToScreen(ghost_spawn)
-        ghost = Ghost(gameInit, translated[0], translated[1], UniSize, game, GhostColors[i % 4])
-        gameInit.AddGhost(ghost)
-    
     for powerup_space in game.powerupSpace:
         translated = MazeToScreen(powerup_space)
         powerup = Powerup(gameInit, translated[0] + UniSize / 2, translated[1] + UniSize / 2)
         gameInit.AddPowerup(powerup)
-
-    pacman = Player(gameInit, 32, 32, UniSize)
+    
+    for i, ghost_spawn in enumerate(game.ghost_spawns):
+        translated = MazeToScreen(ghost_spawn)
+        ghost = Ghost(gameInit, translated[0], translated[1], UniSize, game, GhostColors[i % 4])
+        gameInit.AddGhost(ghost)
+    
+    translated = MazeToScreen(game.hero_spawn)
+    pacman = Player(gameInit, translated[0], translated[1], UniSize)
     gameInit.AddPacman(pacman)
     gameInit.MainLoop(120)
