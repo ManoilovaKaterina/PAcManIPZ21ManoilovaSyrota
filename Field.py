@@ -14,9 +14,24 @@ class Pathfinder: # знаходження шляху у лабиринті
         res = self.pf.get_path(from_x, from_y, to_x, to_y)
         return [(sub[1], sub[0]) for sub in res] # отримання координат шляху
 
-class MazeAndPathController:
-    def __init__(self):
-        self.ascii_maze = [
+# лабірінти різних рівнів
+diffEasy = [
+            "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "X                      G   X",
+            "X XXXX XX          XX XXXX X",
+            "X XXXX XX XXXXXXXX XX XXXX X",
+            "X      XX    XX    XX      X",
+            "XXXXXX XXXXX XX XXXXX XXXXXX",
+            "             P              ",
+            "XXXXXX XXXXX XX XXXXX XXXXXX",
+            "X      XX O  XX  O XX      X",
+            "X XXXX XX XXXXXXXX XX XXXX X",
+            "X XXXX XX          XX XXXX X",
+            "X   G                      X",
+            "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        ]
+
+diffNormal = [
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
             "X            XX            X",
             "X XXXX XXXXX XX XXXXX XXXX X",
@@ -25,29 +40,35 @@ class MazeAndPathController:
             "X      XX    XX    XX      X",
             "XXXXXX XXXXX XX XXXXX XXXXXX",
             "XXXXXX XX          XX XXXXXX",
-            "XXXXXX XX XXX  XXX XX XXXXXX",
-            "XXXXXX XX X      X XX XXXXXX",
-            "          X GGGG X          ",
-            "XXXXXX XX X      X XX XXXXXX",
+            "XXXXXX XX XXXGBXXX XX XXXXXX",
+            "XXXXXX XX XBBBBBBX XX XXXXXX",
+            "          XBGGBGBX          ",
+            "XXXXXX XX XBBBBBBX XX XXXXXX",
             "XXXXXX XX XXXXXXXX XX XXXXXX",
             "XXXXXX XX          XX XXXXXX",
             "XXXXXX XX XXXXXXXX XX XXXXXX",
             "X            XX            X",
             "X XXXX XXXXX XX XXXXX XXXX X",
             "X XXXX XXXXX XX XXXXX XXXX X",
-            "X   XX                XX   X",
+            "X   XX       P        XX   X",
             "XXX XX XX XXXXXXXX XX XX XXX",
             "X      XX    XX    XX      X",
             "X XXXXXXXXXX XX XXXXXXXXXX X",
-            "X                          X",
+            "X   O                 O    X",
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
         ]
-        self.dotPlace = []
-        self.ghost_spawns = []
+
+class MazeAndPathController:
+    def __init__(self, level):
+        self.ascii_maze = level
+        self.hero_spawn = (0, 0)
         self.numpy_maze = []
-        self.reachable_spaces = []
+        self.dotPlace = []
+        self.powerupSpace = []
+        self.blankSpaces = []
+        self.ghost_spawns = []
         self.size = (0, 0)
-        self.convert_maze_to_numpy()
+        self.MazeToNumpy()
         self.p = Pathfinder(self.numpy_maze)
 
     def NewRanPath(self, in_ghost: Ghost): # отримання випадкового шляху в лабірінті
@@ -58,22 +79,23 @@ class MazeAndPathController:
         test_path = [MazeToScreen(item) for item in path]
         in_ghost.SetNewPath(test_path)
 
-    def convert_maze_to_numpy(self):
+    def MazeToNumpy(self): # перетворення запису лабірінту в масив
         for x, row in enumerate(self.ascii_maze):
             self.size = (len(row), x + 1)
             binary_row = []
             for y, column in enumerate(row):
-
-
+                if column == "P":
+                    self.hero_spawn = (y, x)
                 if column == "G":
                     self.ghost_spawns.append((y, x))
-
                 if column == "X":
                     binary_row.append(0)
                 else:
                     binary_row.append(1)
+                    if (column != "B") & (column != "G"):
+                        self.dotPlace.append((y, x))
+                    self.blankSpaces.append((y, x))
+                    if column == "O":
+                        self.powerupSpace.append((y, x))
 
-                    self.dotPlace.append((y, x))
-                    self.reachable_spaces.append((y, x))
-                    
             self.numpy_maze.append(binary_row)
