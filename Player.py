@@ -7,8 +7,8 @@ class Player(MovableObject):
     def __init__(self, surf, x, y, initSize: int):
         super().__init__(surf, x, y, initSize, (255, 255, 0))
         self.lastNonCollidingPos = (0, 0)
-        self.open = pygame.image.load("E:/UNI/2 курс/2 семестр/NI_RPZ/PacMan1.png")
-        self.closed = pygame.image.load("E:/UNI/2 курс/2 семестр/NI_RPZ/PacMan2.png")
+        self.open = pygame.image.load("C:/Users/undor/sprites/PacMan1.png")
+        self.closed = pygame.image.load("C:/Users/undor/sprites/PacMan2.png")
         self.image = self.open
         self.mouth_open = True
 
@@ -29,7 +29,8 @@ class Player(MovableObject):
 
         if self.CollidesWall((self.x, self.y)): # уникнення стикання зі стінами
             self.setPosition(self.lastNonCollidingPos[0], self.lastNonCollidingPos[1])
-            
+        self.CookiePickup()
+        
     def Move(self, dir: Direction):
         collisionResult = self.CheckCollision(dir)
 
@@ -40,6 +41,25 @@ class Player(MovableObject):
             self.setPosition(desiredPosition[0], desiredPosition[1])
         else:
             self.currentDirection = self.lastWorkingDirection
+
+    def CookiePickup(self):
+        collision_rect = pygame.Rect(self.x, self.y, self.size, self.size)
+        cookies = self.gameInit.GetCookies()
+        gameObj = self.gameInit.GetGameObjects()
+        cookie_to_remove = None
+
+        for cookie in cookies: # з'їдання точки
+            collides = collision_rect.colliderect(cookie.getShape())
+            if collides and cookie in gameObj:
+                gameObj.remove(cookie)
+                self.gameInit.score += 10
+                cookie_to_remove = cookie
+
+        if cookie_to_remove is not None:
+            cookies.remove(cookie_to_remove)
+
+        if len(self.gameInit.GetCookies()) == 0: # перемога при з'їданні усіх точок
+            self.gameInit.win = True
 
     def draw(self):
         self.image = self.open if self.mouth_open else self.closed # зображення відкривання роту

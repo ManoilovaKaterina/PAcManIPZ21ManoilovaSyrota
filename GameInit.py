@@ -179,7 +179,7 @@ class GameInit:  # ініціалізація параметрів гри
 
     def GetCookies(self):
         return self.cookies
-
+    
     def GetGhosts(self):
         return self.ghosts
 

@@ -5,7 +5,7 @@ from Field import *
 from MoveObj import *
 from Ghost import *
 from Player import *
-from StaticObjects import *
+from StaticObjects import *  
 
 # кольори привидів
 GhostColors = [
