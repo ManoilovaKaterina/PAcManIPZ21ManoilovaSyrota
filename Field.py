@@ -45,7 +45,7 @@ diffNormal = [
             "          XBGGBGBX          ",
             "XXXXXX XX XBBBBBBX XX XXXXXX",
             "XXXXXX XX XXXXXXXX XX XXXXXX",
-            "XXXXXX XX          XX XXXXXX",
+            "XXXXXX XX    P     XX XXXXXX",
             "XXXXXX XX XXXXXXXX XX XXXXXX",
             "X            XX            X",
             "X XXXX XXXXX XX XXXXX XXXX X",

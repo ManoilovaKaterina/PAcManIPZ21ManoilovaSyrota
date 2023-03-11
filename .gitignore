@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/python,windows,visualstudiocode
-# Edit at https://www.toptal.com/developers/gitignore?templates=python,windows,visualstudiocode
+# Created by https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,windows
+# Edit at https://www.toptal.com/developers/gitignore?templates=python,visualstudiocode,windows
 
 ### Python ###
 # Byte-compiled / optimized / DLL files
@@ -170,6 +170,9 @@ poetry.toml
 # ruff
 .ruff_cache/
 
+# LSP config files
+pyrightconfig.json
+
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
@@ -215,4 +218,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/python,windows,visualstudiocode
+# End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,windows

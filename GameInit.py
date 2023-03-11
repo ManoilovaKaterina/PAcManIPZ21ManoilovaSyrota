@@ -84,7 +84,7 @@ class GameInit:  # ініціалізація параметрів гри
             self.clock.tick(initfps) # кадрів в секунду
             self.screen.fill((1, 14, 18)) # заповнюємо фон кольором
             self.HandleEvents()
-
+            
     def Pause(self):
         loop = 1
         self.DisplayText("PAUSE", (self.width / 2 - 150, self.height / 2 - 150), 60)
@@ -179,7 +179,7 @@ class GameInit:  # ініціалізація параметрів гри
 
     def GetCookies(self):
         return self.cookies
-    
+
     def GetGhosts(self):
         return self.ghosts
 

@@ -1,6 +1,6 @@
 import pygame
 
-from GameInit import *
+from GameInit import GameObject, Direction
 
 class MovableObject(GameObject): # об'єкти, які рухаються
     def __init__(self, surf, x, y, initSize: int, initColor=(255, 0, 0)):

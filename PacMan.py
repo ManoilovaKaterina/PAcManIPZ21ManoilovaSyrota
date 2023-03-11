@@ -5,15 +5,16 @@ from Field import *
 from MoveObj import *
 from Ghost import *
 from Player import *
-from StaticObjects import *  
+from StaticObjects import *
 
 # кольори привидів
 GhostColors = [
-            "E:/UNI/2 курс/2 семестр/NI_RPZ/RedGhost.png",
-            "E:/UNI/2 курс/2 семестр/NI_RPZ/PinkGhost.png",
-            "E:/UNI/2 курс/2 семестр/NI_RPZ/OrangeGhost.png",
-            "E:/UNI/2 курс/2 семестр/NI_RPZ/BlueGhost.png"
+            "C:/Users/undor/sprites/RedGhost.png",
+            "C:/Users/undor/sprites/PinkGhost.png",
+            "C:/Users/undor/sprites/OrangeGhost.png",
+            "C:/Users/undor/sprites/BlueGhost.png"
         ]
+
 
 def StartGame(UniSize, pacman_game, size):
     gameInit = GameInit(size[0] * UniSize, 800)
@@ -27,7 +28,7 @@ def StartGame(UniSize, pacman_game, size):
         translated = MazeToScreen(cookie_space)
         cookie = Cookie(gameInit, translated[0] + UniSize / 2, translated[1] + UniSize / 2)
         gameInit.AddCookie(cookie)
-
+       
     for powerup_space in pacman_game.powerupSpace:
         translated = MazeToScreen(powerup_space)
         powerup = Powerup(gameInit, translated[0] + UniSize / 2, translated[1] + UniSize / 2)
@@ -39,6 +40,7 @@ def StartGame(UniSize, pacman_game, size):
         gameInit.AddGhost(ghost)
 
     translated = MazeToScreen(pacman_game.hero_spawn)
+
     pacman = Player(gameInit, translated[0], translated[1], UniSize)
     gameInit.AddPacman(pacman)
     gameInit.isChasing = True
