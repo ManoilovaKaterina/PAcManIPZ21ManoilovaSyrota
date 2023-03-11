@@ -1,7 +1,7 @@
 import pygame
 from enum import Enum
 
-GeneralFont = 'C:/Users/undor/sprites/Press_Start_2P/PressStart2P-Regular.ttf'
+GeneralFont = 'E:/UNI/2 курс/2 семестр/NI_RPZ/PressStart2P-Regular.ttf'
 
 class Direction(Enum): # клас для визначення напрямку руху
     DOWN = -90
@@ -84,6 +84,23 @@ class GameInit:  # ініціалізація параметрів гри
             self.clock.tick(initfps) # кадрів в секунду
             self.screen.fill((1, 14, 18)) # заповнюємо фон кольором
             self.HandleEvents()
+            
+    def Pause(self):
+        loop = 1
+        self.DisplayText("PAUSE", (self.width / 2 - 150, self.height / 2 - 150), 60)
+        while loop:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    loop = 0
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.done = True
+                        loop = 0
+                    if event.key == pygame.K_SPACE:
+                        self.screen.fill((0, 0, 0))
+                        loop = 0
+            pygame.display.update()
+            self.clock.tick(60)
 
     def ModeSwitch(self): # зміна фаз гри
         currentPhaseTime = self.modes[self.currentPhase]
@@ -207,6 +224,8 @@ class GameInit:  # ініціалізація параметрів гри
             self.pacman.SetDirection(Direction.DOWN)
         elif pressed[pygame.K_RIGHT]:
             self.pacman.SetDirection(Direction.RIGHT)
+        if pressed[pygame.K_ESCAPE]:
+            self.Pause()
 
 def ScreenToMaze(initCoords, initSize=32): # дістає безпосередні координати у лабиринті
     return int(initCoords[0] / initSize), int(initCoords[1] / initSize)

@@ -14,9 +14,24 @@ class Pathfinder: # знаходження шляху у лабиринті
         res = self.pf.get_path(from_x, from_y, to_x, to_y)
         return [(sub[1], sub[0]) for sub in res] # отримання координат шляху
 
-class MazeAndPathController:
-    def __init__(self):
-        self.ascii_maze = [
+# лабірінти різних рівнів
+diffEasy = [
+            "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            "X                      G   X",
+            "X XXXX XX          XX XXXX X",
+            "X XXXX XX XXXXXXXX XX XXXX X",
+            "X      XX    XX    XX      X",
+            "XXXXXX XXXXX XX XXXXX XXXXXX",
+            "             P              ",
+            "XXXXXX XXXXX XX XXXXX XXXXXX",
+            "X      XX O  XX  O XX      X",
+            "X XXXX XX XXXXXXXX XX XXXX X",
+            "X XXXX XX          XX XXXX X",
+            "X   G                      X",
+            "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+        ]
+
+diffNormal = [
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
             "X            XX            X",
             "X XXXX XXXXX XX XXXXX XXXX X",
@@ -27,7 +42,7 @@ class MazeAndPathController:
             "XXXXXX XX          XX XXXXXX",
             "XXXXXX XX XXXGBXXX XX XXXXXX",
             "XXXXXX XX XBBBBBBX XX XXXXXX",
-            "          XBBGGGBX          ",
+            "          XBGGBGBX          ",
             "XXXXXX XX XBBBBBBX XX XXXXXX",
             "XXXXXX XX XXXXXXXX XX XXXXXX",
             "XXXXXX XX    P     XX XXXXXX",
@@ -35,19 +50,23 @@ class MazeAndPathController:
             "X            XX            X",
             "X XXXX XXXXX XX XXXXX XXXX X",
             "X XXXX XXXXX XX XXXXX XXXX X",
-            "X   XX                XX   X",
+            "X   XX       P        XX   X",
             "XXX XX XX XXXXXXXX XX XX XXX",
             "X      XX    XX    XX      X",
             "X XXXXXXXXXX XX XXXXXXXXXX X",
-            "X    O                O    X",
+            "X   O                 O    X",
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
         ]
+
+class MazeAndPathController:
+    def __init__(self, level):
+        self.ascii_maze = level
+        self.hero_spawn = (0, 0)
+        self.numpy_maze = []
         self.dotPlace = []
         self.powerupSpace = []
         self.blankSpaces = []
         self.ghost_spawns = []
-        self.numpy_maze = []
-        self.reachable_spaces = []
         self.size = (0, 0)
         self.MazeToNumpy()
         self.p = Pathfinder(self.numpy_maze)
