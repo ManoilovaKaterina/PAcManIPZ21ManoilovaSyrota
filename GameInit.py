@@ -76,14 +76,39 @@ class GameInit:  # ініціалізація параметрів гри
 
             self.DisplayText(f"[Score: {self.score}]  [Lives: {self.lives}]") # показуємо кількість очків та життів
 
+            pressed = pygame.key.get_pressed()
             if self.pacman is None: # завершаємо гру, якщо гравця вбито, або рахуємо перемогу у її випадку
                 self.DisplayText("GAME OVER", (self.width / 2 - 256, self.height / 2 - 256), 60)
+                self.DisplayText("press SPACE or ESC to return to main menu", (self.width / 2 - 286, self.height / 2 - 156), 15)
+                if (pressed[pygame.K_ESCAPE]) or (pressed[pygame.K_SPACE]):
+                    self.done = True
             if self.win:
                 self.DisplayText("YOU WON", (self.width / 2 - 256, self.height / 2 - 256), 60)
+                self.DisplayText("press SPACE or ESC to return to main menu", (self.width / 2 - 286, self.height / 2 - 156), 15)
+                if (pressed[pygame.K_ESCAPE]) or (pressed[pygame.K_SPACE]):
+                    self.done = True
             pygame.display.flip()
             self.clock.tick(initfps) # кадрів в секунду
             self.screen.fill((1, 14, 18)) # заповнюємо фон кольором
             self.HandleEvents()
+            
+    def Pause(self):
+        loop = 1
+        self.DisplayText("PAUSE", (self.width / 2 - 150, self.height / 2 - 150), 60)
+        self.DisplayText("press SPACE to continue or ESC to return to main menu", (self.width / 2 - 396, self.height / 2 - 56), 15)
+        while loop:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    loop = 0
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.done = True
+                        loop = 0
+                    if event.key == pygame.K_SPACE:
+                        self.screen.fill((0, 0, 0))
+                        loop = 0
+            pygame.display.update()
+            self.clock.tick(120)
 
     def ModeSwitch(self): # зміна фаз гри
         currentPhaseTime = self.modes[self.currentPhase]
@@ -199,14 +224,16 @@ class GameInit:  # ініціалізація параметрів гри
         # управління
         pressed = pygame.key.get_pressed()
         if self.pacman is None: return
-        if pressed[pygame.K_UP]:
+        if pressed[pygame.K_UP] or pressed[pygame.K_w]:
             self.pacman.SetDirection(Direction.UP)
-        elif pressed[pygame.K_LEFT]:
+        elif pressed[pygame.K_LEFT] or pressed[pygame.K_a]:
             self.pacman.SetDirection(Direction.LEFT)
-        elif pressed[pygame.K_DOWN]:
+        elif pressed[pygame.K_DOWN] or pressed[pygame.K_s]:
             self.pacman.SetDirection(Direction.DOWN)
-        elif pressed[pygame.K_RIGHT]:
+        elif pressed[pygame.K_RIGHT] or pressed[pygame.K_d]:
             self.pacman.SetDirection(Direction.RIGHT)
+        if pressed[pygame.K_ESCAPE]:
+            self.Pause()
 
 def ScreenToMaze(initCoords, initSize=32): # дістає безпосередні координати у лабиринті
     return int(initCoords[0] / initSize), int(initCoords[1] / initSize)
