@@ -19,7 +19,14 @@ GhostColors = [
         ]
 
 
-def StartGame(UniSize, pacman_game, size):
+def StartGame(UniSize: int, pacman_game: MazeAndPathController, size: int):
+    """
+    Задає параметри та починає гру.
+
+    :param UniSize: параметр масштабування гри.
+    :param pacman_game: поле гри.
+    :param size: розмір вікна.
+    """
     gameInit = GameInit(size[0] * UniSize, 800)
     
     for y, row in enumerate(pacman_game.numpy_maze):
@@ -27,6 +34,11 @@ def StartGame(UniSize, pacman_game, size):
             if column == 0:
                 gameInit.AddWall(Wall(gameInit, x, y, UniSize))
 
+    for no_player_space in pacman_game.noPlayerSpaces:
+        translated = no_player_space
+        new_nps = NoPlayerSpace(gameInit, translated[0], translated[1], UniSize)
+        gameInit.AddNPS(new_nps)
+        
     for cookie_space in pacman_game.dotPlace:
         translated = MazeToScreen(cookie_space)
         cookie = Cookie(gameInit, translated[0] + UniSize / 2, translated[1] + UniSize / 2)
@@ -50,6 +62,7 @@ def StartGame(UniSize, pacman_game, size):
     gameInit.MainLoop(120)
 
 def MainMenu():
+    """ Головне меню гри."""
     UniSize = 32
     screen_width = 900
     screen_height = 800
