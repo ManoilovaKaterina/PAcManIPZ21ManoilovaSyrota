@@ -1,24 +1,34 @@
 import pytest
-from Field import *
-from GameInit import *
-from PacMan import *
+from Field import diffEasy, MazeAndPathController
+from GameInit import GameInit, MazeToScreen, ScreenToMaze, Direction
+from PacMan import GhostColors
+from StaticObjects import Wall
+from Ghost import Ghost
+from Player import Player
 
-def test_path2():
-    expected = [(1, 11), (2, 11), (3, 11), (4, 11), (5, 11), (6, 11), (6, 12), (6, 13), (5, 13), (4, 13), (3, 13), (2, 13), (1, 13)]
-    assert MazeAndPathController(diffEasy).p.get_path(11, 0, 13, 1) == expected
-
-def test_arrays3():
-    assert MazeAndPathController(diffEasy).ascii_maze == diffEasy
-
-def test_maze_to_screen7():
-    assert MazeToScreen((10, 10)) == (320, 320)
-
-def test_screen_to_maze8():
-    assert ScreenToMaze((320, 320)) == (10, 10)
 
 global testghost
 global testpacman
 global testgame
+
+
+def test_path2():
+    expected = [(1, 11), (2, 11), (3, 11), (4, 11), (5, 11), (6, 11), (6, 12),
+                (6, 13), (5, 13), (4, 13), (3, 13), (2, 13), (1, 13)]
+    assert MazeAndPathController(diffEasy).p.get_path(11, 0, 13, 1) == expected
+
+
+def test_arrays3():
+    assert MazeAndPathController(diffEasy).ascii_maze == diffEasy
+
+
+def test_maze_to_screen7():
+    assert MazeToScreen((10, 10)) == (320, 320)
+
+
+def test_screen_to_maze8():
+    assert ScreenToMaze((320, 320)) == (10, 10)
+
 
 def initGameForTests():
     global testghost
@@ -37,26 +47,28 @@ def initGameForTests():
                 testgame.AddWall(Wall(testgame, x, y, UniSize))
 
     translated = MazeToScreen(pacman_game.ghost_spawns[0])
-    testghost = Ghost(testgame, translated[0], translated[1], UniSize, pacman_game, GhostColors[0])
+    testghost = Ghost(testgame, translated[0], translated[1],
+                      UniSize, pacman_game, GhostColors[0])
     testgame.AddGhost(testghost)
 
     testpacman = Player(testgame, translated[0], translated[1], UniSize)
     testgame.AddPacman(testpacman)
-    # testgame.isChasing = True
-    # testgame.MainLoop(120)
+
 
 initGameForTests()
+
 
 @pytest.mark.parametrize("loc", [(3, 2), (10, 21), (13, 0), None])
 def test_nextloc13(loc):
     testghost.locationQueue.append(loc)
     assert testghost.GetNextLocation() == loc
 
-@pytest.mark.parametrize("dir", [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT])
+
+@pytest.mark.parametrize("dir", [Direction.UP, Direction.DOWN,
+                                 Direction.LEFT, Direction.RIGHT])
 def test_ghost_move4(dir):
     testghost.setPosition(6, 11)
     preLoc = testghost.getPosition()
-    
     testghost.Move(dir)
 
     if dir == Direction.UP:
@@ -70,7 +82,9 @@ def test_ghost_move4(dir):
 
     assert testghost.getPosition() == preLoc
 
-@pytest.mark.parametrize("dir", [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT])
+
+@pytest.mark.parametrize("dir", [Direction.UP, Direction.DOWN,
+                                 Direction.LEFT, Direction.RIGHT])
 def test_collides14(dir):
     testghost.setPosition(testghost.spawnPoint[0], testghost.spawnPoint[1])
     if dir == Direction.UP:
@@ -83,15 +97,19 @@ def test_collides14(dir):
         expected = (False, (417, 352))
     assert testghost.CheckCollision(dir) == expected
 
-@pytest.mark.parametrize("x, y", [(0, 1), (1, 0), (0, -1), (-1, 0), (0, 0), (1, 1)])
+
+@pytest.mark.parametrize("x, y",
+                         [(0, 1), (1, 0), (0, -1), (-1, 0), (0, 0), (1, 1)])
 def test_dir15(x, y):
-    testghost.nextTarget = (testghost.getPosition()[0]+x, testghost.getPosition()[1]+y)
-    if(x==0):
+    testghost.nextTarget = (testghost.getPosition()[0]+x,
+                            testghost.getPosition()[1]+y)
+
+    if (x == 0):
         if y > 0:
             expected = Direction.DOWN
         else:
             expected = Direction.UP
-    elif(y==0):
+    elif (y == 0):
         if x > 0:
             expected = Direction.RIGHT
         else:
@@ -99,6 +117,7 @@ def test_dir15(x, y):
     else:
         expected = Direction.NONE
     assert testghost.DirectionToNextTarget() == expected
+
 
 def test_phases():
     expphase = testgame.currentPhase + 1
