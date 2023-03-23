@@ -10,7 +10,7 @@ def test_path2():
 def test_arrays3():
     assert MazeAndPathController(diffEasy).ascii_maze == diffEasy
 
-def test_maze_t_screen7():
+def test_maze_to_screen7():
     assert MazeToScreen((10, 10)) == (320, 320)
 
 def test_screen_to_maze8():
@@ -18,35 +18,39 @@ def test_screen_to_maze8():
 
 global testghost
 global testpacman
+global testgame
 
 def initGameForTests():
     global testghost
     global testpacman
+    global testgame
+
     pacman_game = MazeAndPathController(diffEasy)
     size = pacman_game.size
     UniSize = 32
 
-    gameInit = GameInit(size[0] * UniSize, 800)
+    testgame = GameInit(size[0] * UniSize, 800)
 
     for y, row in enumerate(pacman_game.numpy_maze):
         for x, column in enumerate(row):
             if column == 0:
-                gameInit.AddWall(Wall(gameInit, x, y, UniSize))
+                testgame.AddWall(Wall(testgame, x, y, UniSize))
 
     translated = MazeToScreen(pacman_game.ghost_spawns[0])
-    testghost = Ghost(gameInit, translated[0], translated[1], UniSize, pacman_game, GhostColors[0])
-    gameInit.AddGhost(testghost)
+    testghost = Ghost(testgame, translated[0], translated[1], UniSize, pacman_game, GhostColors[0])
+    testgame.AddGhost(testghost)
 
-    testpacman = Player(gameInit, translated[0], translated[1], UniSize)
-    gameInit.AddPacman(testpacman)
-    # gameInit.isChasing = True
-    # gameInit.MainLoop(120)
+    testpacman = Player(testgame, translated[0], translated[1], UniSize)
+    testgame.AddPacman(testpacman)
+    # testgame.isChasing = True
+    # testgame.MainLoop(120)
 
 initGameForTests()
 
-def test_nextloc13():
-    testghost.locationQueue.append((3, 2))
-    assert testghost.GetNextLocation() == (3, 2)
+@pytest.mark.parametrize("loc", [(3, 2), (10, 21), (13, 0), None])
+def test_nextloc13(loc):
+    testghost.locationQueue.append(loc)
+    assert testghost.GetNextLocation() == loc
 
 @pytest.mark.parametrize("dir", [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT])
 def test_ghost_move4(dir):
@@ -66,9 +70,38 @@ def test_ghost_move4(dir):
 
     assert testghost.getPosition() == preLoc
 
-def test_collides14():
-    testghost.setPosition(testghost.spawnPoint[0], testghost.spawnPoint[1]-1)
-    assert testghost.CheckCollision(Direction.LEFT) == (True, (415, 351))
+@pytest.mark.parametrize("dir", [Direction.UP, Direction.DOWN, Direction.LEFT, Direction.RIGHT])
+def test_collides14(dir):
+    testghost.setPosition(testghost.spawnPoint[0], testghost.spawnPoint[1])
+    if dir == Direction.UP:
+        expected = (True, (416, 351))
+    elif dir == Direction.DOWN:
+        expected = (True, (416, 353))
+    elif dir == Direction.LEFT:
+        expected = (False, (415, 352))
+    else:
+        expected = (False, (417, 352))
+    assert testghost.CheckCollision(dir) == expected
 
-def test_dir15():
-    assert testghost.DirectionToNextTarget() == Direction.NONE
+@pytest.mark.parametrize("x, y", [(0, 1), (1, 0), (0, -1), (-1, 0), (0, 0), (1, 1)])
+def test_dir15(x, y):
+    testghost.nextTarget = (testghost.getPosition()[0]+x, testghost.getPosition()[1]+y)
+    if(x==0):
+        if y > 0:
+            expected = Direction.DOWN
+        else:
+            expected = Direction.UP
+    elif(y==0):
+        if x > 0:
+            expected = Direction.RIGHT
+        else:
+            expected = Direction.LEFT
+    else:
+        expected = Direction.NONE
+    assert testghost.DirectionToNextTarget() == expected
+
+def test_phases():
+    expphase = testgame.currentPhase + 1
+    expchase = not testgame.isChasing
+    testgame.ModeSwitch()
+    assert expchase == testgame.isChasing, expphase == testgame.currentPhase
