@@ -21,14 +21,6 @@ class Ghost(MovableObject):
         if (self.x, self.y) == self.nextTarget:
             self.nextTarget = self.GetNextLocation()
         self.currentDirection = self.DirectionToNextTarget()
-
-    def SetNewPath(self: MovableObject, path: list): # задання нового шляху
-        """
-        Задає новий шлях та наступну ціль привида.
-        """
-        for item in path:
-            self.locationQueue.append(item)
-        self.nextTarget = self.GetNextLocation()
         
     def DirectionToNextTarget(self: MovableObject) -> Direction:
         """
@@ -68,6 +60,14 @@ class Ghost(MovableObject):
         new_path = [MazeToScreen(item) for item in path]
         self.SetNewPath(new_path)
     
+    def SetNewPath(self: MovableObject, path: list): # задання нового шляху
+        """
+        Задає новий шлях та наступну ціль привида.
+        """
+        for item in path:
+            self.locationQueue.append(item)
+        self.nextTarget = self.GetNextLocation()
+        
     def tick(self):
         self.ReachedTarget()
         self.Move(self.currentDirection)

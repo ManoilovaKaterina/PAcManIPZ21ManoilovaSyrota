@@ -132,13 +132,13 @@ class GameInit:  # ініціалізація параметрів гри
         scatterTime = currentPhaseTime[0] # час блукання привидів без цілі
         chaseTime = currentPhaseTime[1] # час переслідування равця привидами
 
-        if self.isChasing == True:
+        if self.isChasing:
             self.currentPhase += 1
             self.isChasing = False
         else:
             self.isChasing = True
 
-        if self.isChasing == False:
+        if not self.isChasing:
             usedTime = scatterTime
         else:
             usedTime = chaseTime

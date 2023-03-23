@@ -104,13 +104,13 @@ def MainMenu():
                     if event.key == pygame.K_ESCAPE:
                         pygame.quit()
                         quit()
-                    if (selected=="rules") & ((event.key==pygame.K_UP)or(event.key==pygame.K_w)):
+                    if (selected=="rules") and ((event.key==pygame.K_UP)or(event.key==pygame.K_w)):
                         selected="start"
-                    elif (selected=="start") & ((event.key==pygame.K_DOWN)or(event.key==pygame.K_s)):
+                    elif (selected=="start") and ((event.key==pygame.K_DOWN)or(event.key==pygame.K_s)):
                         selected="rules"
-                    elif (selected=="rules") & ((event.key==pygame.K_DOWN)or(event.key==pygame.K_s)):
+                    elif (selected=="rules") and ((event.key==pygame.K_DOWN)or(event.key==pygame.K_s)):
                         selected="quit"
-                    elif (selected=="quit") & ((event.key==pygame.K_UP)or(event.key==pygame.K_w)):
+                    elif (selected=="quit") and ((event.key==pygame.K_UP)or(event.key==pygame.K_w)):
                         selected="rules"
                     if event.key==pygame.K_RETURN:
                         if selected=="start":
@@ -151,13 +151,13 @@ def MainMenu():
                     if event.key == pygame.K_ESCAPE:
                         selected = "start"
                         Choose = "menu"
-                    if (selected=="normal") & ((event.key==pygame.K_UP)or(event.key==pygame.K_w)):
+                    if (selected=="normal") and ((event.key==pygame.K_UP)or(event.key==pygame.K_w)):
                         selected="easy"
-                    elif (selected=="easy") & ((event.key==pygame.K_DOWN)or(event.key==pygame.K_s)):
+                    elif (selected=="easy") and ((event.key==pygame.K_DOWN)or(event.key==pygame.K_s)):
                         selected="normal"
-                    elif (selected=="normal") & ((event.key==pygame.K_DOWN)or(event.key==pygame.K_s)):
+                    elif (selected=="normal") and ((event.key==pygame.K_DOWN)or(event.key==pygame.K_s)):
                         selected="hard"
-                    elif (selected=="hard") & ((event.key==pygame.K_UP)or(event.key==pygame.K_w)):
+                    elif (selected=="hard") and ((event.key==pygame.K_UP)or(event.key==pygame.K_w)):
                         selected="normal"
                     if event.key==pygame.K_RETURN:
                         if selected=="easy":
