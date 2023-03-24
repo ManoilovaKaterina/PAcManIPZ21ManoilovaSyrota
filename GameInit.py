@@ -1,7 +1,7 @@
 import pygame
 from enum import Enum
 
-GeneralFont = 'C:/Users/undor/sprites/Press_Start_2P/PressStart2P-Regular.ttf'
+GeneralFont = 'text/Press_Start_2P/PressStart2P-Regular.ttf'
 
 class Direction(Enum): # клас для визначення напрямку руху
     DOWN = -90
