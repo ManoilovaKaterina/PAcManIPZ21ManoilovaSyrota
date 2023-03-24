@@ -8,8 +8,8 @@ class Player(MovableObject):
         super().__init__(surf, x, y, initSize, (255, 255, 0))
         self.lastNonCollidingPos = (0, 0)
         self.spawnPoint = [x, y]
-        self.open = pygame.image.load("C:/Users/undor/sprites/PacMan1.png")
-        self.closed = pygame.image.load("C:/Users/undor/sprites/PacMan2.png")
+        self.open = pygame.image.load("images/PacMan1.png")
+        self.closed = pygame.image.load("images/PacMan2.png")
         self.image = self.open
         self.mouth_open = True
 
