@@ -12,7 +12,7 @@ class Ghost(MovableObject):
         self.movement = True
         self.spawnPoint = [x, y] # початкова координата
         self.spriteBasic = pygame.image.load(SpritePath)
-        self.spritePowerup = pygame.image.load("C:/Users/undor/sprites/GhostFright.png")
+        self.spritePowerup = pygame.image.load("images/GhostFright.png")
         
     def ReachedTarget(self: MovableObject): # поведінка при досягненні цілі
         """
