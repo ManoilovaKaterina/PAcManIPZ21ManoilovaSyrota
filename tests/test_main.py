@@ -6,6 +6,8 @@ from StaticObjects import Wall
 from Ghost import Ghost
 from Player import Player
 
+import os
+os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 global testghost
 global testpacman
