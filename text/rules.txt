@@ -1,0 +1,10 @@
+You play as a yellow ball-shaped creature - Pac-Man.
+The main goal of the game is to eat all the white
+dots on the level. At the same time, four ghosts
+will constantly interfere with him - Inky, Pinky,
+Blinky and Clyde. When they touch Pac-Man, he
+will lose a life (there are 3 in total).
+Also, Pac-Man can eat a large dot, which makes
+the ghosts turn blue, and Pac-Man can eat them,
+and get points for them. However, each ghost
+eaten will reappear at the spawn point.

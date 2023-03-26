@@ -1,19 +1,19 @@
 import pygame
 
-from GameInit import Direction
+from GameInit import GameInit, Direction
 from MoveObj import MovableObject
 
 class Player(MovableObject):
-    def __init__(self, surf, x, y, initSize: int):
+    def __init__(self: MovableObject, surf: GameInit, x: int, y: int, initSize: int):
         super().__init__(surf, x, y, initSize, (255, 255, 0))
         self.lastNonCollidingPos = (0, 0)
         self.spawnPoint = [x, y]
-        self.open = pygame.image.load("C:/Users/undor/sprites/PacMan1.png")
-        self.closed = pygame.image.load("C:/Users/undor/sprites/PacMan2.png")
+        self.open = pygame.image.load("images/PacMan1.png")
+        self.closed = pygame.image.load("images/PacMan2.png")
         self.image = self.open
         self.mouth_open = True
 
-    def tick(self):
+    def tick(self: MovableObject):
         if self.x < 0: # переміщення гравця, проходячи крізь край екрану
             self.x = self.gameInit.width
 
@@ -22,30 +22,38 @@ class Player(MovableObject):
 
         self.lastNonCollidingPos = self.getPosition()
 
-        if self.CheckCollision(self.directionBuffer)[0]: # перевірка стикання зі стіною
+        if self.CheckCollision(self.directionBuffer, True)[0]: # перевірка стикання зі стіною
             self.Move(self.currentDirection)
         else:
             self.Move(self.directionBuffer) # збереження останнього натисненого повороту
             self.currentDirection = self.directionBuffer
 
-        if self.CollidesWall((self.x, self.y)): # уникнення стикання зі стінами
+        if self.CollidesWall((self.x, self.y), True): # уникнення стикання зі стінами
             self.setPosition(self.lastNonCollidingPos[0], self.lastNonCollidingPos[1])
 
         self.CookiePickup()
         self.HandleGhosts()
 
-    def Move(self, dir: Direction):
-        collisionResult = self.CheckCollision(dir)
+    def Move(self: MovableObject, dir: Direction):
+        """
+        Переміщує гравця.
+
+        :param dir: напрямок руху гравця.
+        """
+        collisionResult = self.CheckCollision(dir, True)
 
         desiredPositionCollision = collisionResult[0]
-        if not desiredPositionCollision:
+        if not desiredPositionCollision: # рухає гравця в ту сторону, де нема стикання зі стінами
             self.lastWorkingDirection = self.currentDirection
             desiredPosition = collisionResult[1]
             self.setPosition(desiredPosition[0], desiredPosition[1])
-        else:
+        else: # у іншому випадку зберігає попередній напрямок
             self.currentDirection = self.lastWorkingDirection
 
-    def CookiePickup(self):
+    def CookiePickup(self:  MovableObject):
+        """
+        Відтворює з'їдання точки та паверапу.
+        """
         collision_rect = pygame.Rect(self.x, self.y, self.size, self.size)
         cookies = self.gameInit.GetCookies()
         powerups = self.gameInit.GetPowerups()
@@ -73,7 +81,8 @@ class Player(MovableObject):
                     self.gameInit.score += 50
                     self.gameInit.ActivatePowerup()
 
-    def HandleGhosts(self): # стикання з привидами
+    def HandleGhosts(self: MovableObject):
+        """ Відтворює стикання з привидами."""
         collision_rect = pygame.Rect(self.x, self.y, self.size, self.size)
         ghosts = self.gameInit.GetGhosts()
         gameObj = self.gameInit.GetGameObjects()
