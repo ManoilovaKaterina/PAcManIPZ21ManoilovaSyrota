@@ -3,19 +3,19 @@ from GameInit import Direction
 
 
 @pytest.mark.parametrize("loc", [(3, 2), (10, 21), (13, 0), None])
-def test_nextloc13(loc, initTestGhost):
-    testghost = initTestGhost
-    testghost.locationQueue.append(loc)
-    assert testghost.GetNextLocation() == loc
+def test_next_loc(loc, initTestGhost):
+    initTestGhost.locationQueue.append(loc)
+    assert initTestGhost.GetNextLocation() == loc
 
 
+@pytest.mark.movement
 @pytest.mark.parametrize("dir", [Direction.UP, Direction.DOWN,
                                  Direction.LEFT, Direction.RIGHT])
-def test_ghost_move4(dir, initTestGhost):
-    testghost = initTestGhost
-    testghost.setPosition(6, 11)
-    preLoc = testghost.getPosition()
-    testghost.Move(dir)
+def test_ghost_move(dir, initTestGhost):
+    initTestGhost
+    initTestGhost.setPosition(6, 11)
+    preLoc = initTestGhost.getPosition()
+    initTestGhost.Move(dir)
 
     if dir == Direction.UP:
         preLoc = (preLoc[0], preLoc[1] - 1)
@@ -26,14 +26,16 @@ def test_ghost_move4(dir, initTestGhost):
     elif dir == Direction.RIGHT:
         preLoc = (preLoc[0] + 1, preLoc[1])
 
-    assert testghost.getPosition() == preLoc
+    assert initTestGhost.getPosition() == preLoc
 
 
+@pytest.mark.collision
 @pytest.mark.parametrize("dir", [Direction.UP, Direction.DOWN,
                                  Direction.LEFT, Direction.RIGHT])
-def test_collides14(dir, initTestGhost):
-    testghost = initTestGhost
-    testghost.setPosition(testghost.spawnPoint[0], testghost.spawnPoint[1])
+def test_ghost_collides(dir, initTestGhost):
+    initTestGhost
+    initTestGhost.setPosition(initTestGhost.spawnPoint[0],
+                              initTestGhost.spawnPoint[1])
     if dir == Direction.UP:
         expected = (True, (416, 351))
     elif dir == Direction.DOWN:
@@ -42,15 +44,15 @@ def test_collides14(dir, initTestGhost):
         expected = (False, (415, 352))
     else:
         expected = (False, (417, 352))
-    assert testghost.CheckCollision(dir) == expected
+    assert initTestGhost.CheckCollision(dir) == expected
 
 
 @pytest.mark.parametrize("x, y",
                          [(0, 1), (1, 0), (0, -1), (-1, 0), (0, 0), (1, 1)])
-def test_dir15(x, y, initTestGhost):
-    testghost = initTestGhost
-    testghost.nextTarget = (testghost.getPosition()[0]+x,
-                            testghost.getPosition()[1]+y)
+def test_ghost_dir(x, y, initTestGhost):
+    initTestGhost
+    initTestGhost.nextTarget = (initTestGhost.getPosition()[0]+x,
+                                initTestGhost.getPosition()[1]+y)
 
     if (x == 0):
         if y > 0:
@@ -64,4 +66,4 @@ def test_dir15(x, y, initTestGhost):
             expected = Direction.LEFT
     else:
         expected = Direction.NONE
-    assert testghost.DirectionToNextTarget() == expected
+    assert initTestGhost.DirectionToNextTarget() == expected
