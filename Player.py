@@ -66,7 +66,7 @@ class Player(MovableObject):
         gameObj = self.gameInit.GetGameObjects()
         cookie_to_remove = None
 
-        for cookie in cookies:
+        for cookie in cookies:  # з'їдання точки
             collides = collision_rect.colliderect(cookie.getShape())
             if collides and cookie in gameObj:
                 gameObj.remove(cookie)
@@ -76,13 +76,13 @@ class Player(MovableObject):
         if cookie_to_remove is not None:
             cookies.remove(cookie_to_remove)
 
-        if len(self.gameInit.GetCookies()) == 0:
+        if len(self.gameInit.GetCookies()) == 0:  # перемога при з'їданні усіх точок
             self.gameInit.win = True
 
         for powerup in powerups:
             collides = collision_rect.colliderect(powerup.getShape())
             if collides and powerup in gameObj:
-                if not self.gameInit.IsPowerupActive():
+                if not self.gameInit.IsPowerupActive():  # вмикання паверапу
                     gameObj.remove(powerup)
                     self.gameInit.score += 50
                     self.gameInit.ActivatePowerup()
@@ -95,16 +95,15 @@ class Player(MovableObject):
         for ghost in ghosts:
             collides = collision_rect.colliderect(ghost.getShape())
             if collides and ghost in gameObj:
-                if self.gameInit.IsPowerupActive():
+                if self.gameInit.IsPowerupActive():  # вбити привида при паверапі
                     ghost.Kill()
                     self.gameInit.GhostRespawn()
                     self.gameInit.score += 400
                 else:
-                    if not self.gameInit.win:
+                    if not self.gameInit.win:  # вбити пакмена у іншому випадку
                         self.gameInit.KillPacman()
 
     def draw(self):
-        self.image = self.open if self.mouth_open else self.closed
-        self.image = pygame.transform.rotate(self.image,
-                                             self.currentDirection.value)
+        self.image = self.open if self.mouth_open else self.closed  # зображення відкривання роту
+        self.image = pygame.transform.rotate(self.image, self.currentDirection.value)
         super(Player, self).draw()

@@ -5,10 +5,11 @@ import random
 from GameInit import ScreenToMaze, MazeToScreen
 from Ghost import Ghost
 
-class Pathfinder: # знаходження шляху у лабиринті
+
+class Pathfinder:  # знаходження шляху у лабиринті
     def __init__(self, in_arr):
         cost = np.array(in_arr, dtype=np.bool_).tolist()
-        self.pf = tcod.path.AStar(cost=cost, diagonal=0) # отримання шляху за допомогою функції бібліотеки tcod
+        self.pf = tcod.path.AStar(cost=cost, diagonal=0)  # отримання шляху за допомогою функції бібліотеки tcod
 
     def get_path(self, from_x: int, from_y: int, to_x: int, to_y: int) -> list:
         """
@@ -22,7 +23,8 @@ class Pathfinder: # знаходження шляху у лабиринті
         :return: список координат шляху
         """
         res = self.pf.get_path(from_x, from_y, to_x, to_y)
-        return [(sub[1], sub[0]) for sub in res] # отримання координат шляху
+        return [(sub[1], sub[0]) for sub in res]  # отримання координат шляху
+
 
 # лабірінти різних рівнів
 diffEasy = [
@@ -105,6 +107,7 @@ diffHard = [
             "XXXXXXXXXXXXXXXXXXXXXXXXXXXX",
         ]
 
+
 class MazeAndPathController:
     def __init__(self, level):
         self.ascii_maze = level
@@ -118,7 +121,7 @@ class MazeAndPathController:
         self.MazeToNumpy()
         self.p = Pathfinder(self.numpy_maze)
 
-    def NewRanPath(self, in_ghost: Ghost): # отримання випадкового шляху в лабірінті
+    def NewRanPath(self, in_ghost: Ghost):  # отримання випадкового шляху в лабірінті
         """
         Задає випадковий шлях для привида.
 

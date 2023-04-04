@@ -3,6 +3,7 @@ import pygame
 from GameInit import GameInit, Direction, ScreenToMaze, MazeToScreen
 from MoveObj import MovableObject
 
+
 class Ghost(MovableObject):
     def __init__(self: MovableObject, surf: GameInit, x: int, y: int, initSize: int, initGameController, SpritePath: str):
         super().__init__(surf, x, y, initSize)
@@ -10,26 +11,26 @@ class Ghost(MovableObject):
         self.spritePath = SpritePath
         self.dead = False
         self.movement = True
-        self.spawnPoint = [x, y] # початкова координата
+        self.spawnPoint = [x, y]  # початкова координата
         self.spriteBasic = pygame.image.load(SpritePath)
         self.spritePowerup = pygame.image.load("images/GhostFright.png")
-        
-    def ReachedTarget(self: MovableObject): # поведінка при досягненні цілі
+      
+    def ReachedTarget(self: MovableObject):  # поведінка при досягненні цілі
         """
         Задає положення наступної цілі та напрямок до неї.
         """
         if (self.x, self.y) == self.nextTarget:
             self.nextTarget = self.GetNextLocation()
         self.currentDirection = self.DirectionToNextTarget()
-        
+   
     def DirectionToNextTarget(self: MovableObject) -> Direction:
         """
         Отримує напрямок до наступної цілі.
 
         :return: напрямок Direction.
         """
-        if self.nextTarget is None: # у режимі переслідування шлях до гравця, інакше - випадковий
-            if self.gameInit.isChasing == True and not self.gameInit.IsPowerupActive():
+        if self.nextTarget is None:  # у режимі переслідування шлях до гравця, інакше - випадковий
+            if self.gameInit.isChasing and not self.gameInit.IsPowerupActive():
                 self.PathToPlayer()
             else:
                 self.gameController.NewRanPath(self)
@@ -37,13 +38,13 @@ class Ghost(MovableObject):
 
         diff_x = self.nextTarget[0] - self.x
         diff_y = self.nextTarget[1] - self.y
-        
-        if diff_x == 0: # визначення напряму в залежності від координат
+
+        if diff_x == 0:  # визначення напряму в залежності від координат
             return Direction.DOWN if diff_y > 0 else Direction.UP
         if diff_y == 0:
             return Direction.LEFT if diff_x < 0 else Direction.RIGHT
 
-        if self.gameInit.isChasing == True and not self.gameInit.IsPowerupActive():
+        if self.gameInit.isChasing and not self.gameInit.IsPowerupActive():
             self.PathToPlayer()
         else:
             self.gameController.NewRanPath(self)
@@ -59,15 +60,15 @@ class Ghost(MovableObject):
 
         new_path = [MazeToScreen(item) for item in path]
         self.SetNewPath(new_path)
-    
-    def SetNewPath(self: MovableObject, path: list): # задання нового шляху
+
+    def SetNewPath(self: MovableObject, path: list):  # задання нового шляху
         """
         Задає новий шлях та наступну ціль привида.
         """
         for item in path:
             self.locationQueue.append(item)
         self.nextTarget = self.GetNextLocation()
-        
+
     def tick(self):
         self.ReachedTarget()
         self.Move(self.currentDirection)
@@ -78,7 +79,7 @@ class Ghost(MovableObject):
 
         :param dir: напрямок руху.
         """
-        if(self.movement):
+        if self.movement:
             if dir == Direction.UP:
                 self.setPosition(self.x, self.y - 1)
             elif dir == Direction.DOWN:

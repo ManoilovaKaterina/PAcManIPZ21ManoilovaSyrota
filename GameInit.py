@@ -3,25 +3,27 @@ from enum import Enum
 
 GeneralFont = 'text/Press_Start_2P/PressStart2P-Regular.ttf'
 
-class Direction(Enum): # клас для визначення напрямку руху
+
+class Direction(Enum):  # клас для визначення напрямку руху
     DOWN = -90
     RIGHT = 0
     UP = 90
     LEFT = 180
     NONE = 360
-    
-class GameObject: # загальний клас об'єктів гри
-    def __init__(self, surf, x: int, y:int, initSize: int, initColor=(0, 0, 0), isCircle: bool = False):
+
+
+class GameObject:  # загальний клас об'єктів гри
+    def __init__(self, surf, x: int, y: int, initSize: int, initColor=(0, 0, 0), isCircle: bool = False):
         self.size = initSize
         self.y = y
         self.x = x
         self.color = initColor
         self.circle = isCircle
-        self.gameInit: GameInit = surf # параметри гри
-        self.surface = surf.screen # площа екрану
-        self.shape = pygame.Rect(self.x, self.y, initSize, initSize) # форма об'єкта, стандартна - квадрат
+        self.gameInit: GameInit = surf  # параметри гри
+        self.surface = surf.screen  # площа екрану
+        self.shape = pygame.Rect(self.x, self.y, initSize, initSize)  # форма об'єкта, стандартна - квадрат
 
-    def draw(self): 
+    def draw(self):
         """ Промальовка об'єкту. """
         if self.circle:
             pygame.draw.circle(self.surface, self.color, (self.x, self.y), self.size)
@@ -29,7 +31,7 @@ class GameObject: # загальний клас об'єктів гри
             rectangle = pygame.Rect(self.x, self.y, self.size, self.size)
             pygame.draw.rect(self.surface, self.color, rectangle, border_radius = 4)
 
-    def tick(self): 
+    def tick(self):
         """ Поведінка об'єкту на кожному кадрі """
         pass
 
@@ -50,12 +52,13 @@ class GameObject: # загальний клас об'єктів гри
         """
         return (self.x, self.y)
 
+
 class GameInit:  # ініціалізація параметрів гри
     def __init__(self, initWidth: int, initHeight: int):
         self.width = initWidth
         self.height = initHeight
         self.screen = pygame.display.set_mode((initWidth, initHeight))
-        self.clock = pygame.time.Clock() # початок відліку часу
+        self.clock = pygame.time.Clock()  # початок відліку часу
         self.done = False
         self.win = False
         self.gameObjects = []
@@ -69,11 +72,11 @@ class GameInit:  # ініціалізація параметрів гри
         self.score = 0
         self.powerupActive = False
         self.isChasing = False
-        self.modeSwitchEvent = pygame.USEREVENT + 1 # задаємо додаткові події
+        self.modeSwitchEvent = pygame.USEREVENT + 1  # задаємо додаткові події
         self.powerupEndEvent = pygame.USEREVENT + 2
         self.mouthOpenEvent = pygame.USEREVENT + 3
         self.ghostRespawnEvent = pygame.USEREVENT + 4
-        self.modes = [(7, 20),(7, 20),(5, 20),(5, 999999)] # зміна фаз гри, від якої залежить поведінка привидів
+        self.modes = [(7, 20), (7, 20), (5, 20), (5, 999999)]  # зміна фаз гри, від якої залежить поведінка привидів
         self.currentPhase = 0
 
     def MainLoop(self, initfps: int):
@@ -82,17 +85,17 @@ class GameInit:  # ініціалізація параметрів гри
 
         :param initfps: к-ть кадрів в секунду.
         """
-        self.ModeSwitch() # зміна фаз гри
+        self.ModeSwitch()  # зміна фаз гри
         pygame.time.set_timer(self.mouthOpenEvent, 200)
         while not self.done:
             for game_object in self.gameObjects:
                 game_object.tick()
                 game_object.draw()
 
-            self.DisplayText(f"[Score: {self.score}]  [Lives: {self.lives}]") # показуємо кількість очків та життів
+            self.DisplayText(f"[Score: {self.score}]  [Lives: {self.lives}]")  # показуємо кількість очків та життів
 
             pressed = pygame.key.get_pressed()
-            if self.pacman is None: # завершаємо гру, якщо гравця вбито, або рахуємо перемогу у її випадку
+            if self.pacman is None:  # завершаємо гру, якщо гравця вбито, або рахуємо перемогу у її випадку
                 self.DisplayText("GAME OVER", (self.width / 2 - 256, self.height / 2 - 256), 60)
                 self.DisplayText("press SPACE or ESC to return to main menu", (self.width / 2 - 286, self.height / 2 - 156), 15)
                 if (pressed[pygame.K_ESCAPE]) or (pressed[pygame.K_SPACE]):
@@ -103,10 +106,10 @@ class GameInit:  # ініціалізація параметрів гри
                 if (pressed[pygame.K_ESCAPE]) or (pressed[pygame.K_SPACE]):
                     self.done = True
             pygame.display.flip()
-            self.clock.tick(initfps) # кадрів в секунду
-            self.screen.fill((1, 14, 18)) # заповнюємо фон кольором
+            self.clock.tick(initfps)  # кадрів в секунду
+            self.screen.fill((1, 14, 18))  # заповнюємо фон кольором
             self.HandleEvents()
-            
+
     def Pause(self):
         """ Пауза. """
         loop = 1
@@ -126,11 +129,11 @@ class GameInit:  # ініціалізація параметрів гри
             pygame.display.update()
             self.clock.tick(120)
 
-    def ModeSwitch(self): 
+    def ModeSwitch(self):
         """ Зміна режимів поведінки привидів. """
         currentPhaseTime = self.modes[self.currentPhase]
-        scatterTime = currentPhaseTime[0] # час блукання привидів без цілі
-        chaseTime = currentPhaseTime[1] # час переслідування равця привидами
+        scatterTime = currentPhaseTime[0]  # час блукання привидів без цілі
+        chaseTime = currentPhaseTime[1]  # час переслідування равця привидами
 
         if self.isChasing:
             self.currentPhase += 1
@@ -142,7 +145,7 @@ class GameInit:  # ініціалізація параметрів гри
             usedTime = scatterTime
         else:
             usedTime = chaseTime
-        pygame.time.set_timer(self.modeSwitchEvent, usedTime * 1000) # відлік часу до наступної зміни фази
+        pygame.time.set_timer(self.modeSwitchEvent, usedTime * 1000)  # відлік часу до наступної зміни фази
 
     # додавання об'єктів у гру
     def AddCookie(self, obj: GameObject):
@@ -164,12 +167,12 @@ class GameInit:  # ініціалізація параметрів гри
         """ Додає стіну."""
         self.gameObjects.append(obj)
         self.walls.append(obj)
-    
+
     def AddNPS(self, obj: GameObject):
         """ Додає місце, недоступне для гравця."""
         self.gameObjects.append(obj)
         self.nps.append(obj)
-    
+
     def AddPacman(self, in_hero):
         """ Додає гравця."""
         self.gameObjects.append(in_hero)
@@ -178,7 +181,7 @@ class GameInit:  # ініціалізація параметрів гри
     def SetPowerupTime(self):
         """ Відлік часу паверапу."""
         pygame.time.set_timer(self.powerupEndEvent, 10000)
-    
+
     def ActivatePowerup(self):
         """ Активує паверап."""
         self.powerupActive = True
@@ -195,12 +198,12 @@ class GameInit:  # ініціалізація параметрів гри
         """ Вбиває гравця."""
         self.lives -= 1
         self.pacman.setPosition(self.pacman.spawnPoint[0], self.pacman.spawnPoint[1]) # переміщення гравця у початкову позицію
-        for ghost in self.ghosts: # повернення привидів до початкового стану
+        for ghost in self.ghosts:  # повернення привидів до початкового стану
             ghost.__init__(self, ghost.spawnPoint[0], ghost.spawnPoint[1], 32, ghost.gameController, ghost.spritePath)
         self.pacman.SetDirection(Direction.NONE)
         if self.lives == 0:
-            self.EndGame() # завершення гри якщо життя закінчились
-    
+            self.EndGame()  # завершення гри якщо життя закінчились
+
     def GhostRespawn(self):
         """ Відлік часу респавну привидів."""
         pygame.time.set_timer(self.ghostRespawnEvent, 5000)
@@ -217,7 +220,7 @@ class GameInit:  # ініціалізація параметрів гри
 
     def GetWalls(self):
         return self.walls
-    
+
     def GetNPS(self):
         return self.nps
 
@@ -232,9 +235,9 @@ class GameInit:  # ініціалізація параметрів гри
 
     def GetGameObjects(self):
         return self.gameObjects
-    
+
     def GetPacmanPosition(self):
-        return self.pacman.getPosition() if self.pacman != None else (0, 0)
+        return self.pacman.getPosition() if self.pacman is not None else (0, 0)
 
     def HandleEvents(self):
         """Управління гравцем та робота з подіями гри."""
@@ -250,16 +253,18 @@ class GameInit:  # ініціалізація параметрів гри
 
             if event.type == self.ghostRespawnEvent:
                 for ghost in self.ghosts:
-                    if ghost.dead == True: # повернення мертвих привидів до початкового стану 
+                    if ghost.dead:  # повернення мертвих привидів до початкового стану
                         ghost.__init__(self, ghost.spawnPoint[0], ghost.spawnPoint[1], 31, ghost.gameController, ghost.spritePath)
 
-            if event.type == self.mouthOpenEvent: # подія для анімації відкривання роту пакмана
-                if self.pacman is None: break
+            if event.type == self.mouthOpenEvent:  # подія для анімації відкривання роту пакмана
+                if self.pacman is None:
+                    break
                 self.pacman.mouth_open = not self.pacman.mouth_open
 
         # управління
         pressed = pygame.key.get_pressed()
-        if self.pacman is None: return
+        if self.pacman is None:
+            return
         if pressed[pygame.K_UP] or pressed[pygame.K_w]:
             self.pacman.SetDirection(Direction.UP)
         elif pressed[pygame.K_LEFT] or pressed[pygame.K_a]:
@@ -271,9 +276,11 @@ class GameInit:  # ініціалізація параметрів гри
         if pressed[pygame.K_ESCAPE]:
             self.Pause()
 
+
 def ScreenToMaze(initCoords, initSize=32):
     """:return: перетворені координати екрану на безпосередні координати у лабиринті"""
     return int(initCoords[0] / initSize), int(initCoords[1] / initSize)
+
 
 def MazeToScreen(initCoords, initSize=32):
     """:return: перетворені координати лабірінту у вигляд подання на екрані."""
