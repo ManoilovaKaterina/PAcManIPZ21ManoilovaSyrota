@@ -3,6 +3,7 @@ import pygame
 from GameInit import GameInit, Direction
 from MoveObj import MovableObject
 
+
 class Player(MovableObject):
     def __init__(self: MovableObject, surf: GameInit, x: int, y: int, initSize: int):
         super().__init__(surf, x, y, initSize, (255, 255, 0))
@@ -14,7 +15,7 @@ class Player(MovableObject):
         self.mouth_open = True
 
     def tick(self: MovableObject):
-        if self.x < 0: # переміщення гравця, проходячи крізь край екрану
+        if self.x < 0:  # переміщення гравця, проходячи крізь край екрану
             self.x = self.gameInit.width
 
         if self.x > self.gameInit.width:
@@ -22,7 +23,7 @@ class Player(MovableObject):
 
         self.lastNonCollidingPos = self.getPosition()
 
-        if self.CheckCollision(self.directionBuffer, True)[0]: # перевірка стикання зі стіною
+        if self.CheckCollision(self.directionBuffer, True)[0]:  # перевірка стикання зі стіною
             self.Move(self.currentDirection)
         else:
             self.Move(self.directionBuffer) # збереження останнього натисненого повороту
@@ -43,11 +44,11 @@ class Player(MovableObject):
         collisionResult = self.CheckCollision(dir, True)
 
         desiredPositionCollision = collisionResult[0]
-        if not desiredPositionCollision: # рухає гравця в ту сторону, де нема стикання зі стінами
+        if not desiredPositionCollision:  # рухає гравця в ту сторону, де нема стикання зі стінами
             self.lastWorkingDirection = self.currentDirection
             desiredPosition = collisionResult[1]
             self.setPosition(desiredPosition[0], desiredPosition[1])
-        else: # у іншому випадку зберігає попередній напрямок
+        else:  # у іншому випадку зберігає попередній напрямок
             self.currentDirection = self.lastWorkingDirection
 
     def CookiePickup(self:  MovableObject):
@@ -60,7 +61,7 @@ class Player(MovableObject):
         gameObj = self.gameInit.GetGameObjects()
         cookie_to_remove = None
 
-        for cookie in cookies: # з'їдання точки
+        for cookie in cookies:  # з'їдання точки
             collides = collision_rect.colliderect(cookie.getShape())
             if collides and cookie in gameObj:
                 gameObj.remove(cookie)
@@ -70,13 +71,13 @@ class Player(MovableObject):
         if cookie_to_remove is not None:
             cookies.remove(cookie_to_remove)
 
-        if len(self.gameInit.GetCookies()) == 0: # перемога при з'їданні усіх точок
+        if len(self.gameInit.GetCookies()) == 0:  # перемога при з'їданні усіх точок
             self.gameInit.win = True
 
         for powerup in powerups:
             collides = collision_rect.colliderect(powerup.getShape())
             if collides and powerup in gameObj:
-                if not self.gameInit.IsPowerupActive(): # вмикання паверапу
+                if not self.gameInit.IsPowerupActive():  # вмикання паверапу
                     gameObj.remove(powerup)
                     self.gameInit.score += 50
                     self.gameInit.ActivatePowerup()
@@ -89,15 +90,15 @@ class Player(MovableObject):
         for ghost in ghosts:
             collides = collision_rect.colliderect(ghost.getShape())
             if collides and ghost in gameObj:
-                if self.gameInit.IsPowerupActive(): # вбити привида при паверапі
+                if self.gameInit.IsPowerupActive():  # вбити привида при паверапі
                     ghost.Kill()
                     self.gameInit.GhostRespawn()
                     self.gameInit.score += 400
                 else:
-                    if not self.gameInit.win: # вбити пакмена у іншому випадку
+                    if not self.gameInit.win:  # вбити пакмена у іншому випадку
                         self.gameInit.KillPacman()
 
     def draw(self):
-        self.image = self.open if self.mouth_open else self.closed # зображення відкривання роту
+        self.image = self.open if self.mouth_open else self.closed  # зображення відкривання роту
         self.image = pygame.transform.rotate(self.image, self.currentDirection.value)
         super(Player, self).draw()
