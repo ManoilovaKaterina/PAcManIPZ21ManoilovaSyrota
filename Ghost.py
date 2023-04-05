@@ -14,7 +14,7 @@ class Ghost(MovableObject):
         self.spawnPoint = [x, y]  # початкова координата
         self.spriteBasic = pygame.image.load(SpritePath)
         self.spritePowerup = pygame.image.load("images/GhostFright.png")
-      
+
     def ReachedTarget(self: MovableObject):  # поведінка при досягненні цілі
         """
         Задає положення наступної цілі та напрямок до неї.
@@ -22,7 +22,7 @@ class Ghost(MovableObject):
         if (self.x, self.y) == self.nextTarget:
             self.nextTarget = self.GetNextLocation()
         self.currentDirection = self.DirectionToNextTarget()
-   
+
     def DirectionToNextTarget(self: MovableObject) -> Direction:
         """
         Отримує напрямок до наступної цілі.

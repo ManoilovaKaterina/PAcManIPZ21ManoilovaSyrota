@@ -20,7 +20,9 @@ class MovableObject(GameObject):  # об'єкти, які рухаються
         if len(self.locationQueue) == 0:
             return None
         else:
-            self.locationQueue.pop(0)
+            return self.locationQueue.pop(0)
+            
+        # return None if len(self.locationQueue) == 0 else self.locationQueue.pop(0)
 
     def SetDirection(self, dir: Direction):
         """
