@@ -9,7 +9,6 @@ from StaticObjects import Wall, NoPlayerSpace, Cookie, Powerup
 NameFont = 'text/8_bit_arcade/8-bit Arcade Out.ttf'
 NameFontIn = 'text/8_bit_arcade/8-bit Arcade In.ttf'
 
-# кольори привидів
 GhostColors = [
             "images/RedGhost.png",
             "images/PinkGhost.png",
@@ -226,7 +225,7 @@ def MainMenu():
                         selected = "start"
                         Choose = "menu"
 
-            with open('C:/Users/undor/sprites/rules.txt', 'r') as file:
+            with open('text/rules.txt', 'r') as file:
                 data = file.read().split("\n")
             i = 0
             for d in data:

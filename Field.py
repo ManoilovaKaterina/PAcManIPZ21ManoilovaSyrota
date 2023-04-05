@@ -9,7 +9,9 @@ from Ghost import Ghost
 class Pathfinder:  # знаходження шляху у лабиринті
     def __init__(self, in_arr):
         cost = np.array(in_arr, dtype=np.bool_).tolist()
-        self.pf = tcod.path.AStar(cost=cost, diagonal=0)  # отримання шляху за допомогою функції бібліотеки tcod
+
+        # getting the path using the tcod library function
+        self.pf = tcod.path.AStar(cost=cost, diagonal=0)
 
     def get_path(self, from_x: int, from_y: int, to_x: int, to_y: int) -> list:
         """
@@ -121,7 +123,8 @@ class MazeAndPathController:
         self.MazeToNumpy()
         self.p = Pathfinder(self.numpy_maze)
 
-    def NewRanPath(self, in_ghost: Ghost):  # отримання випадкового шляху в лабірінті
+    # getting a random path in the maze
+    def NewRanPath(self, in_ghost: Ghost):
         """
         Задає випадковий шлях для привида.
 

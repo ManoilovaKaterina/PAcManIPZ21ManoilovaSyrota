@@ -3,12 +3,14 @@ import pygame
 from GameInit import GameInit, GameObject, Direction
 
 
-class MovableObject(GameObject):  # об'єкти, які рухаються
+class MovableObject(GameObject):  # moving objects
     def __init__(self: GameObject, surf: GameInit, x: int, y: int, initSize: int, initColor=(255, 0, 0)):
         super().__init__(surf, x, y, initSize, initColor)
         self.currentDirection = Direction.NONE
-        self.directionBuffer = Direction.NONE  # потрібен для збереженні поворота, якщо кнопку було натиснено раніше
-        self.locationQueue = []  # усі доступні розташування
+
+        # is needed to save the turn if the button has been pressed before
+        self.directionBuffer = Direction.NONE
+        self.locationQueue = []  # all available locations
         self.nextTarget = None
 
     def GetNextLocation(self: GameObject) -> list:
@@ -21,8 +23,6 @@ class MovableObject(GameObject):  # об'єкти, які рухаються
             return None
         else:
             return self.locationQueue.pop(0)
-            
-        # return None if len(self.locationQueue) == 0 else self.locationQueue.pop(0)
 
     def SetDirection(self, dir: Direction):
         """
@@ -81,6 +81,6 @@ class MovableObject(GameObject):  # об'єкти, які рухаються
 
         return self.CollidesWall(desiredPosition, isPacman), desiredPosition
 
-    def draw(self):  # промальовка об'єкта
+    def draw(self):  # drawing of the object
         self.image = pygame.transform.scale(self.image, (32, 32))
         self.surface.blit(self.image, self.getShape())

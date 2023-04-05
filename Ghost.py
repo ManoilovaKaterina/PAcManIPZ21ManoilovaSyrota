@@ -11,11 +11,11 @@ class Ghost(MovableObject):
         self.spritePath = SpritePath
         self.dead = False
         self.movement = True
-        self.spawnPoint = [x, y]  # початкова координата
+        self.spawnPoint = [x, y]  # initial coordinate
         self.spriteBasic = pygame.image.load(SpritePath)
         self.spritePowerup = pygame.image.load("images/GhostFright.png")
 
-    def ReachedTarget(self: MovableObject):  # поведінка при досягненні цілі
+    def ReachedTarget(self: MovableObject):  # behavior when achieving the goal
         """
         Задає положення наступної цілі та напрямок до неї.
         """
@@ -29,7 +29,9 @@ class Ghost(MovableObject):
 
         :return: напрямок Direction.
         """
-        if self.nextTarget is None:  # у режимі переслідування шлях до гравця, інакше - випадковий
+
+        # in pursuit mode the path to the player, otherwise - random
+        if self.nextTarget is None:
             if self.gameInit.isChasing and not self.gameInit.IsPowerupActive():
                 self.PathToPlayer()
             else:
@@ -39,7 +41,7 @@ class Ghost(MovableObject):
         diff_x = self.nextTarget[0] - self.x
         diff_y = self.nextTarget[1] - self.y
 
-        if diff_x == 0:  # визначення напряму в залежності від координат
+        if diff_x == 0:  # determination of the direction depending on the coordinates
             return Direction.DOWN if diff_y > 0 else Direction.UP
         if diff_y == 0:
             return Direction.LEFT if diff_x < 0 else Direction.RIGHT
@@ -61,7 +63,7 @@ class Ghost(MovableObject):
         new_path = [MazeToScreen(item) for item in path]
         self.SetNewPath(new_path)
 
-    def SetNewPath(self: MovableObject, path: list):  # задання нового шляху
+    def SetNewPath(self: MovableObject, path: list):  # setting a new path
         """
         Задає новий шлях та наступну ціль привида.
         """
