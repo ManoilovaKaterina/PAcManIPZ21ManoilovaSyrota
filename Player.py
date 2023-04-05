@@ -5,9 +5,11 @@ from MoveObj import MovableObject
 
 
 class Player(MovableObject):
-    def __init__(self: MovableObject, surf: GameInit, x: int, y: int, initSize: int):
+    def __init__(self: MovableObject, surf: GameInit,
+                 x: int, y: int, initSize: int):
         super().__init__(surf, x, y, initSize, (255, 255, 0))
         self.lastNonCollidingPos = (0, 0)
+        self.lastWorkingDirection = Direction.NONE
         self.spawnPoint = [x, y]
         self.open = pygame.image.load("images/PacMan1.png")
         self.closed = pygame.image.load("images/PacMan2.png")
@@ -23,14 +25,16 @@ class Player(MovableObject):
 
         self.lastNonCollidingPos = self.getPosition()
 
-        if self.CheckCollision(self.directionBuffer, True)[0]:  # перевірка стикання зі стіною
+        # перевірка стикання зі стіною
+        if self.CheckCollision(self.directionBuffer, True)[0]:
             self.Move(self.currentDirection)
-        else:
-            self.Move(self.directionBuffer) # збереження останнього натисненого повороту
+        else:  # збереження останнього натисненого повороту
+            self.Move(self.directionBuffer)
             self.currentDirection = self.directionBuffer
 
-        if self.CollidesWall((self.x, self.y), True): # уникнення стикання зі стінами
-            self.setPosition(self.lastNonCollidingPos[0], self.lastNonCollidingPos[1])
+        if self.CollidesWall((self.x, self.y), True):
+            self.setPosition(self.lastNonCollidingPos[0], 
+                             self.lastNonCollidingPos[1])
 
         self.CookiePickup()
         self.HandleGhosts()
@@ -44,7 +48,8 @@ class Player(MovableObject):
         collisionResult = self.CheckCollision(dir, True)
 
         desiredPositionCollision = collisionResult[0]
-        if not desiredPositionCollision:  # рухає гравця в ту сторону, де нема стикання зі стінами
+        # рухає гравця в ту сторону, де нема стикання зі стінами
+        if not desiredPositionCollision:
             self.lastWorkingDirection = self.currentDirection
             desiredPosition = collisionResult[1]
             self.setPosition(desiredPosition[0], desiredPosition[1])
