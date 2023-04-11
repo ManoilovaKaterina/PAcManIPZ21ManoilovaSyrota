@@ -2,12 +2,15 @@ import pygame
 
 from GameInit import GameInit, GameObject, Direction
 
-class MovableObject(GameObject): # об'єкти, які рухаються
+
+class MovableObject(GameObject):  # moving objects
     def __init__(self: GameObject, surf: GameInit, x: int, y: int, initSize: int, initColor=(255, 0, 0)):
         super().__init__(surf, x, y, initSize, initColor)
         self.currentDirection = Direction.NONE
-        self.directionBuffer = Direction.NONE # потрібен для збереженні поворота, якщо кнопку було натиснено раніше
-        self.locationQueue = [] # усі доступні розташування
+
+        # is needed to save the turn if the button has been pressed before
+        self.directionBuffer = Direction.NONE
+        self.locationQueue = []  # all available locations
         self.nextTarget = None
 
     def GetNextLocation(self: GameObject) -> list:
@@ -16,8 +19,11 @@ class MovableObject(GameObject): # об'єкти, які рухаються
 
         :return: None при відсутності доступного місця, у іншому випадку - наступна доступна координата
         """
-        return None if len(self.locationQueue) == 0 else self.locationQueue.pop(0)
-    
+        if len(self.locationQueue) == 0:
+            return None
+        else:
+            return self.locationQueue.pop(0)
+
     def SetDirection(self, dir: Direction):
         """
         Задає напрямок рухомого об'єкта.
@@ -42,12 +48,14 @@ class MovableObject(GameObject): # об'єкти, які рухаються
             noPlayerSpace = self.gameInit.GetNPS()+self.gameInit.GetWalls()
             for nps in noPlayerSpace:
                 collides = collisionRect.colliderect(nps.getShape())
-                if collides: break
+                if collides:
+                    break
         else:
             walls = self.gameInit.GetWalls()
             for wall in walls:
                 collides = collisionRect.colliderect(wall.getShape())
-                if collides: break
+                if collides:
+                    break
         return collides
 
     def CheckCollision(self: GameObject, dir: Direction, isPacman: bool = False)-> bool:
@@ -60,7 +68,8 @@ class MovableObject(GameObject): # об'єкти, які рухаються
         :return: True при стиканні, False у інакшому випадку.
         """
         desiredPosition = (0, 0)
-        if dir == Direction.NONE: return False, desiredPosition
+        if dir == Direction.NONE:
+            return False, desiredPosition
         if dir == Direction.UP:
             desiredPosition = (self.x, self.y - 1)
         elif dir == Direction.DOWN:
@@ -72,6 +81,6 @@ class MovableObject(GameObject): # об'єкти, які рухаються
 
         return self.CollidesWall(desiredPosition, isPacman), desiredPosition
 
-    def draw(self): # промальовка об'єкта
+    def draw(self):  # drawing of the object
         self.image = pygame.transform.scale(self.image, (32, 32))
         self.surface.blit(self.image, self.getShape())

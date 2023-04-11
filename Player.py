@@ -17,7 +17,7 @@ class Player(MovableObject):
         self.mouth_open = True
 
     def tick(self: MovableObject):
-        if self.x < 0:  # переміщення гравця, проходячи крізь край екрану
+        if self.x < 0:  # moving the player by passing through the edge of the screen
             self.x = self.gameInit.width
 
         if self.x > self.gameInit.width:
@@ -25,10 +25,10 @@ class Player(MovableObject):
 
         self.lastNonCollidingPos = self.getPosition()
 
-        # перевірка стикання зі стіною
+        # checking for contact with the wall
         if self.CheckCollision(self.directionBuffer, True)[0]:
             self.Move(self.currentDirection)
-        else:  # збереження останнього натисненого повороту
+        else:  # saving the last pressed turn
             self.Move(self.directionBuffer)
             self.currentDirection = self.directionBuffer
 
@@ -48,7 +48,7 @@ class Player(MovableObject):
         collisionResult = self.CheckCollision(dir, True)
 
         desiredPositionCollision = collisionResult[0]
-        # рухає гравця в ту сторону, де нема стикання зі стінами
+        # moves the player in the direction where there is no contact with the walls
         if not desiredPositionCollision:
             self.lastWorkingDirection = self.currentDirection
             desiredPosition = collisionResult[1]
@@ -66,7 +66,7 @@ class Player(MovableObject):
         gameObj = self.gameInit.GetGameObjects()
         cookie_to_remove = None
 
-        for cookie in cookies:
+        for cookie in cookies:  # з'їдання точки
             collides = collision_rect.colliderect(cookie.getShape())
             if collides and cookie in gameObj:
                 gameObj.remove(cookie)
@@ -76,12 +76,15 @@ class Player(MovableObject):
         if cookie_to_remove is not None:
             cookies.remove(cookie_to_remove)
 
+        # win by eating all the points
         if len(self.gameInit.GetCookies()) == 0:
             self.gameInit.win = True
 
         for powerup in powerups:
             collides = collision_rect.colliderect(powerup.getShape())
             if collides and powerup in gameObj:
+
+                # turning on the power supply
                 if not self.gameInit.IsPowerupActive():
                     gameObj.remove(powerup)
                     self.gameInit.score += 50
@@ -95,16 +98,19 @@ class Player(MovableObject):
         for ghost in ghosts:
             collides = collision_rect.colliderect(ghost.getShape())
             if collides and ghost in gameObj:
+
+                # kill the ghost at paverap
                 if self.gameInit.IsPowerupActive():
                     ghost.Kill()
                     self.gameInit.GhostRespawn()
                     self.gameInit.score += 400
                 else:
-                    if not self.gameInit.win:
+                    if not self.gameInit.win:  # kill pacman otherwise
                         self.gameInit.KillPacman()
 
     def draw(self):
+
+        # image of mouth opening
         self.image = self.open if self.mouth_open else self.closed
-        self.image = pygame.transform.rotate(self.image,
-                                             self.currentDirection.value)
+        self.image = pygame.transform.rotate(self.image, self.currentDirection.value)
         super(Player, self).draw()
