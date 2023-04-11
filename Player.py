@@ -53,7 +53,7 @@ class Player(MovableObject):
             self.lastWorkingDirection = self.currentDirection
             desiredPosition = collisionResult[1]
             self.setPosition(desiredPosition[0], desiredPosition[1])
-        else:  # у іншому випадку зберігає попередній напрямок
+        else:  # otherwise, it keeps the previous direction
             self.currentDirection = self.lastWorkingDirection
 
     def CookiePickup(self:  MovableObject):
@@ -66,7 +66,7 @@ class Player(MovableObject):
         gameObj = self.gameInit.GetGameObjects()
         cookie_to_remove = None
 
-        for cookie in cookies:  # з'їдання точки
+        for cookie in cookies:  # eating point
             collides = collision_rect.colliderect(cookie.getShape())
             if collides and cookie in gameObj:
                 gameObj.remove(cookie)
